@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using Book_Tracking_Application_Lib;
+
 
 namespace Book_Tracking_Application
 {
@@ -31,6 +33,13 @@ namespace Book_Tracking_Application
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Book-Tracking-Application" });
             });
+            //Adding dbContext to the service with the required migration
+            services.AddDbContext<BookCatalogue>(builder =>
+            {
+                builder.UseSqlite("Name=ConnectionStrings:BookCatalogue-Sqlite", b => b.MigrationsAssembly("Book-Tracking-Application-Migration"));
+            });
+
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
